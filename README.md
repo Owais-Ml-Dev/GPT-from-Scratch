@@ -1,6 +1,6 @@
 # GPT Style Language Model From Scratch (PyTorch)
 
-🚧 **Work in Progress** 🚧
+🚧 **Ongoing** 🚧
 
 This repository contains an end to end implementation of a GPT style decoder only transformer built entirely from scratch using PyTorch. The objective of this project is to deeply understand how large language models work internally, rather than relying on pretrained abstractions.
 
