@@ -1,4 +1,4 @@
-# GPT Style Language Model From Scratch (PyTorch)
+# GPT Model Built From Scratch (PyTorch)
 
 🚧 **Ongoing** 🚧
 
