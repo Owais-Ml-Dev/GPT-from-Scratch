@@ -1,108 +1,87 @@
-# GPT Model Built From Scratch (PyTorch)
+# GPT-Style Decoder-Only Transformer from Scratch
 
-🚧 **Ongoing** 🚧
+[![Framework: PyTorch](https://img.shields.io/badge/Framework-PyTorch-EE4C2C?style=flat-square&logo=pytorch&logoColor=white)](https://pytorch.org/)
+[![Optimization: AdamW](https://img.shields.io/badge/Optimizer-AdamW-blue?style=flat-square)](https://arxiv.org/abs/1711.05101)
+[![Status: Ongoing Research](https://img.shields.io/badge/Status-Ongoing%20Research-success?style=flat-square)](https://github.com/Owais-Ml-Dev/GPT-from-Scratch)
 
-This repository contains an end to end implementation of a GPT style decoder only transformer built entirely from scratch using PyTorch. The objective of this project is to deeply understand how large language models work internally, rather than relying on pretrained abstractions.
-
----
-
-## Motivation
-
-Most modern LLM workflows focus on fine tuning existing models. While powerful, this often hides the internal mechanics of transformers.
-
-This project was built from first principles to understand:
-- How causal self attention works at the tensor level
-- How transformer blocks learn contextual relationships
-- How loss behaves during large scale language modeling
-- What affects training stability and convergence
-- How instruction tuning shapes model behavior
-
-Building every component manually has provided strong architectural and optimization level intuition behind LLMs.
+A first-principles implementation of a Generative Pre-trained Transformer (GPT) architecture. This repository bypasses high-level abstractions to manually engineer the internal mechanics of Large Language Models, focusing on tensor-level dynamics, training stability, and causal inference.
 
 ---
 
-## Implemented Features
+## 🎯 Engineering Objectives
 
-### Model Architecture
-- GPT style decoder only transformer
-- Token embeddings and learned positional embeddings
-- Multi head causal self attention with masking
-- Transformer blocks with residual connections and layer normalization
-- Feedforward networks with GELU activation
-- Final projection head for next token prediction
-
-### Tokenization
-- GPT 2 compatible tokenization using tiktoken
-
-## Dataset and Training Setup
-
-- Instruction based JSON dataset with 40,000 samples
-- Dataset split:
-- Training: 34,000
-- Validation: 2,000
-- Test: 4,000
-- Custom PyTorch Dataset and DataLoader
-- Dynamic padding and attention mask handling
-- Shifted targets for next token prediction
+In an era of pre-trained "black-box" models, this project serves as a deep-dive into the fundamental bottlenecks of transformer architectures. The focus is on:
+- **Tensor-Level Causal Attention:** Implementing masked multi-head attention to ensure rigorous next-token prediction without "look-ahead" bias.
+- **Architectural Stability:** Managing gradient flow through residual connections and Layer Normalization.
+- **Inference Optimization:** Engineering sophisticated sampling strategies to balance coherence and creativity.
+- **Optimization Intuition:** Monitoring loss convergence and weight updates to understand the behavior of the **AdamW** optimizer in high-dimensional spaces.
 
 ---
 
-## Training Pipeline
+## 🏗️ Architectural Blueprint
 
-- Objective: Next token prediction
-- Loss function: Cross entropy
-- Optimizer: AdamW
-- Validation based early stopping
-- Periodic evaluation during training
-- GPU supported training
+The model is a decoder-only transformer designed for autoregressive language modeling.
 
-Training and validation loss show stable convergence with no major overfitting, aligning with expected GPT style learning behavior.
-
----
-
-## Text Generation
-
-- Greedy decoding
-- Temperature based sampling
-- Top k sampling
-- Generation stops at end of text token
-
-The model is already capable of generating coherent and context aware responses from instruction prompts.
-
-🚧 **Currently in Progress**
-
-Planned improvements:
-- Longer training runs on larger datasets
-- Perplexity based evaluation
-- Instruction fine tuning experiments
-- LoRA based parameter efficient tuning
-- Improved sampling strategies
-- Code refactoring and modularization
-- Better experiment tracking and documentation
+### Core Components
+* **Embeddings:** Dual-path input processing involving both **Token Embeddings** and **Learned Positional Embeddings** to retain spatial sequence information.
+* **Transformer Blocks:** * **Multi-Head Causal Self-Attention:** Parallelized attention heads with scaled dot-product attention and triangular masking.
+    * **Feed-Forward Networks (FFN):** Position-wise networks utilizing **GELU (Gaussian Error Linear Unit)** activations for non-linear feature mapping.
+    * **Normalization:** Layer Normalization applied before the attention and FFN blocks (Pre-LN architecture) to improve training stability.
+* **Projection Head:** A final linear layer mapping hidden states to the vocabulary dimension for probability distribution modeling.
 
 ---
 
-## Tech Stack
+## 📊 Data Engineering & Training
 
-- Python
-- PyTorch
-- NumPy
-- tiktoken
-- Matplotlib
+### Dataset Characteristics
+- **Source:** Instruction-based dataset containing **40,000 samples**.
+- **Preprocessing:** Custom PyTorch `Dataset` and `DataLoader` implementation with dynamic padding.
+- **Tokenization:** GPT-2 compatible byte-pair encoding (BPE) using **tiktoken**.
+
+### Training Hyperparameters & Logistics
+| Hyperparameter | Value |
+| :--- | :--- |
+| **Objective** | Next-Token Prediction (Cross-Entropy Loss) |
+| **Optimizer** | AdamW (Weight Decay Fix) |
+| **Dataset Split** | 34k Train / 2k Val / 4k Test |
+| **Convergence** | Monitored via Validation-based Early Stopping |
+
+The pipeline includes **Shifted Target Handling**, ensuring the model learns to predict the $n+1$ token based solely on $1 \dots n$ tokens.
 
 ---
 
-## Disclaimer
+## ⚡ Inference & Generation Strategies
 
-This project is built for learning and research purposes to gain a deep understanding of transformer based language models. It is not intended to compete with production scale models.
+Moving beyond simple greedy decoding, I implemented diverse sampling strategies to control the model’s stochastic behavior:
+
+* **Temperature-Based Sampling:** Adjusting the "softness" of the probability distribution to control randomness.
+* **Top-K Sampling:** Filtering the top $K$ most likely next tokens to prune the long tail of low-probability distributions, significantly reducing "gibberish" generation.
+* **End-of-Sequence (EOS) Handling:** Ensuring the model respects logical termination boundaries.
+
+---
+
+## 🛠️ Tech Stack
+
+- **Deep Learning:** PyTorch (Tensor manipulation, Autograd, Module API)
+- **Scientific Computing:** NumPy, Matplotlib (Loss visualization)
+- **Tokenization:** Tiktoken (OpenAI’s BPE implementation)
+- **Environment:** GPU-accelerated training for efficient tensor operations
+
+---
+
+## 🚀 Research Roadmap (Next Steps)
+
+- [ ] **PEFT Implementation:** Integrating **LoRA (Low-Rank Adaptation)** for efficient parameter fine-tuning.
+- [ ] **Evaluation Metrics:** Implementing **Perplexity (PPL)** calculations on the test set.
+- [ ] **Scaling:** Increasing context window length and model depth for complex instruction following.
+- [ ] **Refactoring:** Transitioning to a highly modular, configuration-driven code structure (YAML-based).
 
 ---
 
 ## Author
 
-**Owais Shaikh**  
-Aspiring AI and Machine Learning Engineer  
-Focus Areas: Large Language Models, NLP, Deep Learning Systems
+**Owais Shaikh** *AI and Machine Learning Engineer* Specializing in LLM Internals, NLP Research, and Deep Learning Systems.
 
-- GPT 2 compatible tokenization using tiktoken
-- Instruction formatted prompts using:
+---
+
+> **Note:** This project is a research-driven foundation intended for technical mastery of transformer dynamics and convergence behavior.
